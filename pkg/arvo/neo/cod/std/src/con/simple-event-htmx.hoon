@@ -1,9 +1,12 @@
 /@  simple-event
 /@  simple-event-instance
 /-  feather-icons
+/-  html-utils
 /-  pytz
+/-  time
 /-  rrules
 /-  event-inputs
+=*  mx  mx:html-utils
 :-  [%simple-event %$ %htmx]
 |=  ven=simple-event
 |=  =bowl:neo
@@ -30,10 +33,9 @@
 ++  domain-input
   ^-  manx
   ;form.mt1.fr.ac.jc.g2
-    =hx-post    "/neo/hawk{(en-tape:pith:neo here.bowl)}?stud=simple-event-diff"
+    =hx-post    "/neo/hawk{(en-tape:pith:neo here.bowl)}?stud=domain"
     =hx-target  "find .loading"
     =hx-swap    "outerHTML"
-    =head       "domain"
     =onsubmit
       """
       const leftInput = this.querySelector('[name=\\"domain[l]\\"]'); 
@@ -160,26 +162,110 @@
   ;form.fc.ac.p1.g1.hidden.grow.basis-half.scroll-y.relative
     =id     "editor-{id}"
     =style  "min-width: 300px; height: 100%;"
-    ;div
+    =hx-post    "/neo/hawk{(en-tape:pith:neo here.bowl)}?stud=rrule-args"
+    =hx-target  "find .loading"
+    =hx-swap    "outerHTML"
+    ;div.fc.jc
       =style  "width: 400px;"
       ;div.fr.jb.wf
         ;span.s1: Select Rule:
         ;select.p-1.b4.bd1.br1
+          =name   "rrule"
           =style  "width: min(15rem, 80%); margin-bottom: 0.25rem;"
-          ;*  %+  turn  ~(tap by all:span-rules:standard:rrules)
+          =onchange
+            """
+            $('#parms-{id}').children().addClass('hidden');
+            $(`#parms-$\{this.value}-{id}`).removeClass('hidden');
+            """
+          ;*  %+  turn
+                %+  sort
+                  ~(tap by all:span-rules:standard:rrules)
+                |=([[* a=@t * *] [* b=@t * *]] (aor a b))
               |=  [key=term name=@t * *]
-              ;option(value (trip key)): {(trip name)}
+              ?.  =(key name.rule.ven)
+                ;option(value (trip key)): {(trip name)}
+              ;option(value (trip key), selected ""): {(trip name)}
         ==
       ==
-      ;+
-      =/  [name=@t =parm:rrules *]
-        (~(got by all:span-rules:standard:rrules) name.rule.ven)
+      ;+  parms
+      ;button.bd1.br1.p2.b1.hover.loader
+        ;span.loaded: Submit
+        ;span.loading
+          ;+  loading.feather-icons
+        ==
+      ==
+      ;script(type "module"): {event-listener}
+    ==
+  ==
+::
+++  event-listener
+  """
+  function updateValueAttribute(event) \{
+    const element = event.target;
+    if (element.tagName === 'SELECT' || element.tagName === 'INPUT') \{
+      element.setAttribute('value', element.value);
+    }
+  }
+  
+  const editor = document.getElementById('editor-{id}');
+  
+  editor.addEventListener('change', updateValueAttribute);
+
+  editor.querySelectorAll('select, input').forEach(function(element) \{
+    element.setAttribute('value', element.value);
+  });
+  """
+::
+++  parms
+  ^-  manx
+  ;div.fc.ac.wf(id "parms-{id}")
+    ;*
+    :: Build sensible defaults
+    ::
+    =/  [name=@t =parm:rrules rub=span-rule-builder:rrules]
+      (~(got by all:span-rules:standard:rrules) name.rule.ven)
+    :: Get the example timezone as the argument for the first
+    :: available timezone paramemter
+    ::
+    =/  tz=@t
+      |-
+      ?~  parm
+        'UTC'
+      ?.  ?=(%tz q.i.parm)
+        $(parm t.parm)
+      =/  =arg:rrules  (~(got by args.rule.ven) p.i.parm)
+      ?>(?=(%tz -.arg) p.arg)
+    :: Get the example datetime as the start of the first instance
+    :: of the current rule shifted to the example timezone
+    ::
+    =/  first=@da      (fall (bind (mole |.(((rub args.rule.ven) 0))) head) now.bowl)
+    =/  local=@da      (fall (~(localize-soft zn:pytz tz) first) now.bowl)
+    =/  =fuld:time     (da-to-fuld:time local)
+    =/  clocktime=@dr  (mod local ~d1)
+    ::
+    %+  turn  ~(tap by all:span-rules:standard:rrules)
+    |=  [key=term name=@t =parm:rrules *]
+    ^-  manx
+    =;  m=manx
+      (pid:~(at mx m) "parms-{(trip key)}-{id}")
+    ?:  =(key name.rule.ven)
       %*  $  form-from-args:event-inputs
-        parm            parm
-        args            args.rule.ven
+        parm           parm
+        args           args.rule.ven
+        prefix         (trip key)
         label-classes  "s1"
         input-classes  "p-1 b4 bd1 br1"
       ==
+    =;  m=manx
+       (pac:~(at mx m) "hidden")
+    %*  $  form-from-date:event-inputs
+      parm           parm
+      fuld           fuld
+      clocktime      clocktime
+      tz             tz
+      prefix         (trip key)
+      label-classes  "s1"
+      input-classes  "p-1 b4 bd1 br1"
     ==
   ==
 --

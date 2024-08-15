@@ -3,7 +3,7 @@
 ^-  kook:neo
 |%
 ++  state  pro/%simple-event
-++  poke   (sy %simple-event-diff ~)
+++  poke   (sy %domain %simple-event-diff ~)
 ++  kids
   ^-  kids:neo
   :-  ~
@@ -19,17 +19,20 @@
   ++  init
     |=  pal=(unit pail:neo)
     ^-  (quip card:neo pail:neo)
-    :_  :-  %simple-event  !>
+    =/  ven=simple-event
+        ?^  pal
+          !<(simple-event q.u.pal)
         :*  :-  %single
             %-  ~(gas by *args:rrules)
-            :~  ['Start Date' dt+[[& 2.001] 1 1]]
-                ['Clocktime' ct+~h3.m40]
-                ['Timezone' tz+'America/New_York']
+            :~  ['Start Date' dt+[[& 1.970] 1 1]]
+                ['Clocktime' ct+~s0]
+                ['Timezone' tz+'UTC']
                 ['Duration' dr+~h1]
             ==
-            'Test Event'  [0 3]
+            'No Title'  [0 0]
         ==
-    %+  turn  (gulf [0 3])
+    :_  simple-event+!>(ven)
+    %+  turn  (gulf domain.ven)
     |=  i=@ud
     :-  (welp here.bowl ~[ud+i])
     [%make %simple-event-instance ~ (malt ~[[%ven here.bowl]])]
@@ -37,8 +40,8 @@
   ++  poke
     |=  [=stud:neo vax=vase]
     ^-  (quip card:neo pail:neo)
-    ?>  ?=(%simple-event-diff stud)
-    =+  !<([%domain l=@ud r=@ud] vax)
+    ?>  ?=(%domain stud)
+    =+  !<([l=@ud r=@ud] vax)
     =+  !<(simple-event q.pail)
     :_  simple-event+!>([rule title l r])
     =^  cards  kids.bowl

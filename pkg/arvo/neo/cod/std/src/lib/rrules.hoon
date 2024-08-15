@@ -26,11 +26,11 @@
 ::
 +$  parm  (list (pair @t term))
 ::
-+$  fuld-rule  $-(@ud fuld)        :: fullday (timezone independent)
-+$  span-rule  $-(@ud [@da @da])   :: pair of UTC times
-+$  paxt-rule  $-(@ud [dext dext]) :: pair of timezone indexed times
 +$  date-rule  $-(@ud @da)         :: UTC time
++$  span-rule  $-(@ud [@da @da])   :: pair of UTC times
++$  fuld-rule  $-(@ud fuld)        :: fullday (timezone independent)
 +$  dext-rule  $-(@ud dext)        :: timezone-relative indexed time
++$  paxt-rule  $-(@ud [dext dext]) :: pair of timezone indexed times
 ::
 +$  fuld-rule-builder  $-(args fuld-rule)
 +$  span-rule-builder  $-(args span-rule)
