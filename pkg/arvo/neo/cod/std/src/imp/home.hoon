@@ -37,6 +37,12 @@
         [#/[p/our.bowl]/home/messenger %make %messenger ~ ~]
         [#/[p/our.bowl]/home/landscape %make %iframe `iframe/!>('/apps/landscape') ~]
       ::
+        [#/[p/our.bowl]/home/rrules %make %rrules `folder/!>([%span %fuld %date ~]) ~]
+        [#/[p/our.bowl]/home/rrules/span %make %rrules ~ ~]
+        [#/[p/our.bowl]/home/rrules/span/single-by-end %make %rrule- ~ ~]
+        [#/[p/our.bowl]/home/rrules/fuld %make %rrules ~ ~]
+        [#/[p/our.bowl]/home/rrules/date %make %rrules ~ ~]
+      ::
         [#/[p/our.bowl]/home/docs %make %folder `folder/!>([%introduction %tutorials %guides ~]) ~]
         [#/[p/our.bowl]/home/docs/introduction %make %sail `sail/!>([introduction 'prose p-page mw-page ma' ~]) ~]
       ::

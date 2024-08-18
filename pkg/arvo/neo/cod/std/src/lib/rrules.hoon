@@ -32,8 +32,9 @@
 +$  dext-rule  $-(@ud dext)        :: timezone-relative indexed time
 +$  paxt-rule  $-(@ud [dext dext]) :: pair of timezone indexed times
 ::
-+$  fuld-rule-builder  $-(args fuld-rule)
++$  date-rule-builder  $-(args date-rule)
 +$  span-rule-builder  $-(args span-rule)
++$  fuld-rule-builder  $-(args fuld-rule)
 ::
 ++  standard
   |%
